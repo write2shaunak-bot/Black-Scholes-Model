@@ -1,70 +1,73 @@
 # Black-Scholes Analytics
 
-A full-stack Black-Scholes options pricing engine — FastAPI backend with a React + D3.js frontend.
+Black-Scholes options pricing with a FastAPI backend and a React + D3.js frontend.
 
-Compute European option prices and all five Greeks (Δ, Γ, Θ, ν, ρ) with an interactive surface chart.
+The app calculates European call and put prices plus Delta, Gamma, Theta, Vega, and Rho, and renders a live surface chart.
 
 ---
 
-## Project Structure
+## Clean Project Layout
 
-```
-Black-Scholes-Model/
-├── main.py              # FastAPI backend (pricing engine)
+```text
+bs-app/
+├── main.py              # FastAPI backend
 ├── requirements.txt     # Python dependencies
-├── package.json         # React frontend dependencies
+├── package.json         # React frontend dependencies and scripts
 ├── public/
-│   └── index.html       # HTML entry point
+│   └── index.html       # React HTML entry point
 └── src/
-    ├── index.js         # React entry point
-    ├── index.css        # Global styles
-    ├── App.js           # Main layout & form
-    ├── ResultsTable.js  # Greeks & price display
-    └── GreeksChart.js   # D3.js interactive surface chart
+    ├── App.js           # Main UI
+    ├── GreeksChart.js   # D3.js chart
+    ├── ResultsTable.js  # Results table
+    ├── index.js         # React bootstrap
+    └── index.css        # Global styles
 ```
+
+> The nested `black-scholes-ui/` folder was a duplicate scaffold and is no longer part of the canonical structure.
 
 ---
 
 ## Quick Start
 
-### 1 · Backend (FastAPI)
+### Backend
+
+Run from the project root:
 
 ```bash
-# From the project root
-pip install -r requirements.txt
+cd /Users/shaunakkumar/Downloads/bs-app
+python3 -m pip install -r requirements.txt
 uvicorn main:app --reload --port 8000
 ```
 
-- API base: `http://localhost:8000`
-- Interactive docs: `http://localhost:8000/docs`
-- Health check: `http://localhost:8000/healthz`
+Backend endpoints:
 
-### 2 · Frontend (React)
+- API: `http://localhost:8000`
+- Docs: `http://localhost:8000/docs`
+- Health: `http://localhost:8000/healthz`
+
+### Frontend
+
+Run from the same project root:
 
 ```bash
-# From the project root
+cd /Users/shaunakkumar/Downloads/bs-app
 npm install
 npm start
 ```
 
-App opens at `http://localhost:3000`
-
-> **Note:** The frontend proxies requests to the backend on port 8000.  
-> Make sure the backend is running before opening the UI.
+Frontend runs at `http://localhost:3000`.
 
 ---
 
-## API Reference
+## API Endpoints
 
-| Method | Path            | Description                                     |
-|--------|-----------------|-------------------------------------------------|
-| POST   | `/api/calculate` | Single-point BS price + all Greeks             |
-| GET    | `/api/surface`   | Multi-point surface across ±50% spot range     |
-| GET    | `/healthz`       | Health check → `{"status": "ok"}`              |
+| Method | Path             | Description                              |
+|--------|------------------|------------------------------------------|
+| POST   | `/api/calculate` | Single-point Black-Scholes pricing      |
+| GET    | `/api/surface`   | 100-point price/Greeks surface           |
+| GET    | `/healthz`       | Health check                             |
 
-### POST `/api/calculate`
-
-**Request body:**
+### Example request
 
 ```json
 {
@@ -72,50 +75,28 @@ App opens at `http://localhost:3000`
   "K": 100,
   "T": 1.0,
   "r": 0.05,
-  "v": 0.20,
-  "q": 0.00
+  "v": 0.2,
+  "q": 0.0
 }
 ```
 
-**Response:**
+---
 
-```json
-{
-  "call_price": 10.4506,
-  "put_price":  5.5735,
-  "d1": 0.35,
-  "d2": 0.15,
-  "call_greeks": { "delta": 0.6368, "gamma": 0.0187, "theta": -0.0178, "vega": 0.3752, "rho": 0.5323 },
-  "put_greeks":  { "delta": -0.3632, "gamma": 0.0187, "theta": -0.0128, "vega": 0.3752, "rho": -0.4144 }
-}
-```
+## Parameter Guide
 
-### GET `/api/surface`
-
-Query parameters: `K`, `T`, `r`, `v`, `q`, `steps` (default 100, max 500).
-
-Returns an array of `SurfacePoint` objects spanning `[K × 0.5, K × 1.5]`.
+| Symbol | Meaning               | Example |
+|--------|-----------------------|---------|
+| S      | Spot price            | 100     |
+| K      | Strike price          | 100     |
+| T      | Time to maturity (yr) | 1.0     |
+| r      | Risk-free rate        | 0.05    |
+| v      | Volatility            | 0.20    |
+| q      | Dividend yield        | 0.00    |
 
 ---
 
-## Parameters
+## Notes
 
-| Symbol | Description            | Constraints      | Example |
-|--------|------------------------|------------------|---------|
-| S      | Spot price             | > 0              | 100     |
-| K      | Strike price           | > 0              | 100     |
-| T      | Time to maturity (yr)  | > 0              | 1.0     |
-| r      | Risk-free rate         | decimal          | 0.05    |
-| v (σ)  | Implied volatility     | 0 < v ≤ 10       | 0.20    |
-| q      | Continuous div. yield  | decimal          | 0.00    |
-
----
-
-## Tech Stack
-
-| Layer    | Technology                          |
-|----------|-------------------------------------|
-| Backend  | Python · FastAPI · SciPy · NumPy    |
-| Frontend | React 18 · D3.js v7                 |
-| Protocol | REST / JSON                         |
-
+- Use the project root as your working directory for both backend and frontend commands.
+- `main.py` is the FastAPI entrypoint, so `uvicorn main:app ...` must be run from the root.
+- The React app is defined at the root level in `package.json`, `public/`, and `src/`.
