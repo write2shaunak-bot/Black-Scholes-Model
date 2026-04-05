@@ -4,11 +4,11 @@ const FMT = (n, d = 6) =>
   typeof n === "number" ? n.toFixed(d) : "—";
 
 const GREEK_ROWS = [
-  { key: "delta", label: "Delta (Δ)",       desc: "Price sensitivity to S" },
-  { key: "gamma", label: "Gamma (Γ)",       desc: "Delta sensitivity to S" },
-  { key: "theta", label: "Theta (Θ) /day",  desc: "Time decay per day" },
-  { key: "vega",  label: "Vega (ν) /1%σ",   desc: "Sensitivity to 1% vol move" },
-  { key: "rho",   label: "Rho (ρ) /1%r",    desc: "Sensitivity to 1% rate move" },
+  { key: "delta", label: "Delta (Δ)",      desc: "Price sensitivity to spot" },
+  { key: "gamma", label: "Gamma (Γ)",      desc: "Delta sensitivity to spot" },
+  { key: "theta", label: "Theta (Θ) /day", desc: "Time decay per calendar day" },
+  { key: "vega",  label: "Vega (ν) /1%σ",  desc: "Sensitivity to 1% vol move" },
+  { key: "rho",   label: "Rho (ρ) /1%r",   desc: "Sensitivity to 1% rate move" },
 ];
 
 export default function ResultsTable({ result }) {
