@@ -6,7 +6,7 @@ The app calculates European call and put prices plus Delta, Gamma, Theta, Vega, 
 
 ---
 
-## Clean Project Layout
+## Project Layout
 
 ```text
 bs-app/
@@ -27,7 +27,7 @@ bs-app/
 
 ---
 
-## Quick Start
+## Start
 
 ### Backend
 
@@ -82,7 +82,7 @@ Frontend runs at `http://localhost:3000`.
 
 ---
 
-## Parameter Guide
+## Parameters
 
 | Symbol | Meaning               | Example |
 |--------|-----------------------|---------|
